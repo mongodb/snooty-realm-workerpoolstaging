@@ -1,0 +1,14 @@
+{
+    "app_id": "workerpool-dev-ulqcz",
+    "config_version": 20200603,
+    "name": "WorkerPool-Dev",
+    "location": "US-VA",
+    "deployment_model": "LOCAL",
+    "security": {},
+    "custom_user_data_config": {
+        "enabled": false
+    },
+    "sync": {
+        "development_mode_enabled": false
+    }
+}
