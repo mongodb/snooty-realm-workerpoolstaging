@@ -1,7 +1,6 @@
-[
+
   {
       "name": "addDocHubJobToQueue",
       "private": true,
       "can_evaluate": {}
   }
-]
