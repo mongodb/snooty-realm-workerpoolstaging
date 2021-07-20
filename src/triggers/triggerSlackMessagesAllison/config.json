@@ -14,7 +14,7 @@
         "full_document_before_change": false,
         "unordered": true
     },
-    "disabled": false,
+    "disabled": true,
     "function_name": "handleSlackSummaryMessages"
 }
  
