@@ -6,6 +6,7 @@
 */
   
 exports = function(payload) {
+  console.log("HIYA ALLISON");
   console.log(JSON.stringify(payload));
   try {
     let jobTitle     = "Github Push: " + payload.repository.full_name;
@@ -25,6 +26,7 @@ exports = function(payload) {
       newHead:    payload.after,
     }; 
     
+    console.log("MORE HI");
     console.log(JSON.stringify(newPayload));
     
     context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
