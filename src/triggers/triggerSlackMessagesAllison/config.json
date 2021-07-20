@@ -1,4 +1,20 @@
 {
-	"name": "triggerSlackMessagesAllison",
-	"private": false
+    "name": "triggerSlackMessagesAllisonColl",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "UPDATE"
+        ],
+        "database": "pool_test",
+        "collection": "allison_test_queue",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": true
+    },
+    "disabled": false,
+    "function_name": "handleSlackSummaryMessages"
 }
+ 
