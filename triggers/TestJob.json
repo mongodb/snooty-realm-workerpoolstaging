@@ -1,0 +1,15 @@
+{
+    "name": "TestJob",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "0 */1 * * *"
+    },
+    "disabled": true,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "AddJobToQueueTest"
+            }
+        }
+    }
+}

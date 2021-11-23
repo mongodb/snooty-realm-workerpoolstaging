@@ -1,0 +1,13 @@
+{
+    "name": "allison_webhook_xlarge",
+    "run_as_authed_user": false,
+    "run_as_user_id": "",
+    "run_as_user_id_script_source": "",
+    "options": {
+        "secret": "y(Ve#=Vf#G`*tD58^6L."
+    },
+    "respond_result": true,
+    "disable_arg_logs": true,
+    "fetch_custom_user_data": false,
+    "create_user_on_auth": false
+}

@@ -1,0 +1,6 @@
+{
+    "name": "strapi-staging-webhook",
+    "type": "http",
+    "config": {},
+    "version": 1
+}

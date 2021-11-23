@@ -1,0 +1,6 @@
+{
+    "name": "allowGet",
+    "actions": [
+        "get"
+    ]
+}

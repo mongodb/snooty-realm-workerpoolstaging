@@ -1,0 +1,16 @@
+{
+    "collection": "guru_test_queue",
+    "database": "pool_test",
+    "roles": [
+        {
+            "name": "default",
+            "apply_when": {},
+            "read": true,
+            "write": false,
+            "insert": false,
+            "delete": false,
+            "search": true,
+            "additional_fields": {}
+        }
+    ]
+}

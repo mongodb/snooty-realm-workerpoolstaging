@@ -1,0 +1,6 @@
+{
+    "enabled": true,
+    "app_default_domain": "workerpoolstaging-qgeyp.mongodbstitch.com",
+    "default_error_path": "",
+    "default_error_code": "404"
+}
