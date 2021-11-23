@@ -1,4 +1,5 @@
 {
+    "id": "5e00b7afec293c6507679c4d",
     "name": "dochub-test",
     "type": "DATABASE",
     "config": {
@@ -14,16 +15,8 @@
         "project": {},
         "full_document": true,
         "full_document_before_change": false,
-        "unordered": false
+        "unordered": true
     },
-    "disabled": false,
-    "event_processors": {
-        "AWS_EVENTBRIDGE": {
-            "config": {
-                "account_id": "216656347858",
-                "extended_json_enabled": false,
-                "region": "us-east-2"
-            }
-        }
-    }
+    "function_name": "addDocHubJobToQueue",
+    "disabled": true
 }

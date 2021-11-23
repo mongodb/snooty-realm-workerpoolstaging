@@ -1,15 +1,10 @@
 {
+    "id": "5f291e48108c22f91ffb9f75",
     "name": "TestJob",
     "type": "SCHEDULED",
     "config": {
         "schedule": "0 */1 * * *"
     },
-    "disabled": true,
-    "event_processors": {
-        "FUNCTION": {
-            "config": {
-                "function_name": "AddJobToQueueTest"
-            }
-        }
-    }
+    "function_name": "AddJobToQueueTest",
+    "disabled": true
 }

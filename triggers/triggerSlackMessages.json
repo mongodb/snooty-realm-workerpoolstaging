@@ -1,4 +1,5 @@
 {
+    "id": "5d4328042de84772fcdf9faf",
     "name": "triggerSlackMessages",
     "type": "DATABASE",
     "config": {
@@ -14,12 +15,6 @@
         "full_document_before_change": false,
         "unordered": true
     },
-    "disabled": false,
-    "event_processors": {
-        "FUNCTION": {
-            "config": {
-                "function_name": "handleSlackSummaryMessages"
-            }
-        }
-    }
+    "function_name": "handleSlackSummaryMessages",
+    "disabled": false
 }

@@ -1,4 +1,5 @@
 {
+    "id": "5f292c93108c22f91f00b54f",
     "name": "ProcessJobTest",
     "type": "DATABASE",
     "config": {
@@ -14,12 +15,6 @@
         "full_document_before_change": false,
         "unordered": false
     },
-    "disabled": false,
-    "event_processors": {
-        "FUNCTION": {
-            "config": {
-                "function_name": "ProcessJobTestResults"
-            }
-        }
-    }
+    "function_name": "ProcessJobTestResults",
+    "disabled": false
 }

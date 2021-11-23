@@ -1,4 +1,5 @@
 {
+    "id": "60538b1331b9eed2de47779e",
     "name": "triggerSlackMessageInsertGuruColl",
     "type": "DATABASE",
     "config": {
@@ -33,12 +34,6 @@
         "full_document_before_change": false,
         "unordered": true
     },
-    "disabled": false,
-    "event_processors": {
-        "FUNCTION": {
-            "config": {
-                "function_name": "handleSlackTrigger"
-            }
-        }
-    }
+    "function_name": "handleSlackTrigger",
+    "disabled": false
 }

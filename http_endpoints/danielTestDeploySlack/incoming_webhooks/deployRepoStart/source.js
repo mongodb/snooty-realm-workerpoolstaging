@@ -1,3 +1,4 @@
+
 exports = async function(payload, response) {
   // verify slack auth
   var slackAuth = context.functions.execute("validateSlackAPICall", payload);
@@ -59,52 +60,52 @@ exports = async function(payload, response) {
       coll_name = collection_mappings[parsed.user.id];
   }
   console.log(coll_name)
-  for (let i = 0; i < values.repo_option.length; i++) {
+
+  for (repo in values.repo_option) {
     // // e.g. mongodb/docs-realm/master => (site/repo/branch)
     const buildDetails = values.repo_option[i].value.split('/')
     const repoOwner = buildDetails[0]
     const repoName = buildDetails[1]
-    const branchName = buildDetails[2] 
+    const branchName = buildDetails[2]
     const hashOption =  values.hash_option ? values.hash_option : null
     const jobTitle     = 'Slack deploy: ' + entitlement.github_username;
     const jobUserName  = entitlement.github_username;
-    const jobUserEmail = entitlement.email ? entitlement.email : 'split@nothing.com';
+    const jobUserEmail = entitlement.email ? entitlement.email : 'split@example.com';
     
     console.log(` ${repoName} ${branchName}`);
+    
     const branchObject = await context.functions.execute("getBranchAlias", repoName, branchName)
     console.log(` ${JSON.stringify(branchObject)}`);
-    const active = branchObject.aliasObject.active
+
     const publishOriginalBranchName = branchObject.aliasObject.publishOriginalBranchName
-    const aliases = branchObject.aliasObject.aliases
+    const aliases = branchObject.aliasObject.urlAliases
+    const urlSlug = branchObject.aliasObject.urlSlug ? branchObject.aliasObject.urlSlug : branchObject.aliasObject.gitBranchName;
+    const gitBranchName = branchObject.aliasObject.gitBranchName;
+    const prefix = branchObject.prefix;
+    const project = branchObject.project;
     console.log(` ${publishOriginalBranchName} ${aliases}`);
-    console.log(` ${branchObject.aliasObject.publishOriginalBranchName} ${branchObject.aliasObject.aliases}`);
-    if (!active) {
-      continue;
-    }
-    //This is for non aliased branch
+    console.log(` ${branchObject.aliasObject.publishOriginalBranchName} ${branchObject.aliasObject.urlAliasesliases}`);
+
+    // This is for non aliased repos
     if (aliases === null) {
-      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, false, null)
+      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, prefix, project, hashOption, false, urlSlug, true)
       context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail, coll_name);  
     }
-    //if this is stablebranch, we want autobuilder to know this is unaliased branch and therefore can reindex for search
     else {
-          // we use the primary alias for indexing search, not the original branch name (ie 'master'), for aliased repos 
-      console.log(` ${publishOriginalBranchName} ${aliases}`);
-      if (publishOriginalBranchName && aliases) {
-        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, true, null)
-        console.log(`${newPayload}`);
-        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail, coll_name);  
+      if (publishOriginalBranchName == true & gitBranchName != urlSlug) {
+          aliases = aliases.push(gitBranchName) // now all of the branches we need to build are in the aliases array
       }
-      aliases.forEach(function(alias, index) {
-        console.log(`${alias}`);
-        const primaryAlias = (index === 0);
-        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, hashOption, true, alias, primaryAlias)
-        console.log(`${newPayload}`);
-        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail, coll_name); 
-      })
+      // build urlSlug with global flag
+      const globalIndexPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, prefix, project, hashOption, true, urlSlug, true);
+      context.functions.execute("addJobToQueue", globalIndexPayload, jobTitle, jobUserName, jobUserEmail, coll_name);
+      // pop urlSlug out of aliases array
+      const remainingAliases = aliases.splice(aliases.indexOf(urlSlug));
+      for (var alias of remainingAliases) {
+        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, prefix, project, hashOption, true, alias, false)
+        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail, coll_name);
+      }
     }
   }
-  
   //respond to modal
   response.setHeader("Content-Type", "application/json");
   response.setStatusCode(200);
