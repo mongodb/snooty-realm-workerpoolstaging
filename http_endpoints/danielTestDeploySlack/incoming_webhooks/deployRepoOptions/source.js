@@ -1,4 +1,9 @@
 exports = async function(payload, response) {
+  
+  // IMPORTANT: ask daniel/sue why this is commented out
+  //const yaml = require('js-yaml');
+  console.log(JSON.stringify(payload))
+  console.log(response)
   // http service
   const httpService = context.services.get("slackHTTPService");
 
@@ -7,39 +12,39 @@ exports = async function(payload, response) {
   if (!slackAuth || slackAuth.status !== 'success') {
     return slackAuth;
   }
-
+  
   // get repo options for this user from slack and send over
   var entitlement = await context.functions.execute("getUserEntitlements", payload);
   if (!entitlement || entitlement.status !== 'success') {
     return 'ERROR: you are not entitled to deploy any docs repos';
   }
   
+  const userRepos = entitlement.repos.sort();
+  
   // modify list for slack dropdown
   const repos = [];
-  console.log( entitlement.repos.length)
-  branch_count = 0
-  for (let i = 0; i < entitlement.repos.length; i++) {
+  for (let i = 0; i < userRepos.length; i++) {
     // get published branches for this repo
     let pubBranches = [];
-    const thisRepo = entitlement.repos[i];
+    const thisRepo = userRepos[i];
     const [repoOwner, repoName] = thisRepo.split('/');
     
-    
     const db_name = context.values.get("db_name");
-    const coll_name = "repos_branches"
+    const coll_name = "allison_repos_branches"
     
     var repoCollection = context.services.get("mongodb-atlas").db(db_name).collection(coll_name);
     
     //this is the line to debug!!
     const repo = await repoCollection.findOne({"repoName":repoName});
     const branches = repo ? repo["branches"] : []
-    branch_count+= branches.length;
-    if (branch_count >= 100) {
-      break;
-    }
+    console.log("Hi Allison");
     // construct option for slack
-    branches.forEach(branch => { 
-      const fullBranchPath = `${repoOwner}/${repoName}/${branch["name"]}`
+    
+    for (const branch of branches) { 
+      if (branch["buildsWithSnooty"] === false) { 
+        continue;
+      }
+      const fullBranchPath = `${repoOwner}/${repoName}/${branch["gitBranchName"]}`
       
       var opt = {
         "text": {
@@ -49,10 +54,10 @@ exports = async function(payload, response) {
         "value": fullBranchPath
       };
       repos.push(opt);
-    }); 
-
+    }
   }
-
+  
+  console.log(JSON.stringify(repos))
   const block = {
     "trigger_id": payload.query.trigger_id,
   	"view": {
@@ -118,6 +123,7 @@ exports = async function(payload, response) {
   
   // post to slack to open modal
   // https://api.slack.com/surfaces/modals/using#opening_modals
+  console.log(JSON.stringify(block))
   return http.post({
     url: "https://slack.com/api/views.open",
     headers: {
